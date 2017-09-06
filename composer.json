@@ -1,7 +1,7 @@
 {
     "name": "tangoman/repository-helper",
     "description": "Symfony Repository Helper",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "license": "GPL-3.0",
     "authors": [
         {
