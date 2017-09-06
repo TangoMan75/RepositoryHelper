@@ -64,17 +64,24 @@ trait RepositoryHelper
     /**
      * Returns distinct items from desired column
      *
-     * @param       $item
+     * @param       $property
      * @param array $criteria
      *
      * @return array
      */
-    public function list($item, $criteria = [])
+    public function list($property, $criteria = [])
     {
+        $params = $this->parse($property);
+
         $dql = $this->createQueryBuilder($this->getTableName());
         $dql = $this->filter($dql, $criteria);
-        $dql->select('DISTINCT('.$this->getTableName().'.'.$item.')')
-            ->orderBy($this->getTableName().'.'.$item, 'ASC');
+        $dql->select('DISTINCT('.$params['entity'].'.'.$params['property'].')');
+
+        if ($params['join']) {
+            $dql->leftJoin($this->getTableName().'.'.$params['entity'], $params['entity']);
+        }
+        $dql->orderBy($params['entity'].'.'.$params['property'], 'ASC');
+
         $result = $dql->getQuery()->getScalarResult();
 
         return array_column($result, 1);
