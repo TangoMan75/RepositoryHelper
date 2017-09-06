@@ -119,11 +119,14 @@ Switch values for mode/action
 Helper Functions
 ----------------
 
+getTableName()
+ - Returns current table name
+
 count($criteria = [])
  - Returns element count
 
-getTableName()
- - Returns current table name
+list($item, $criteria = [])
+ - Returns distinct items from desired column
 
 findAllPaged($page = 1, $limit = 10, $criteria = [])
  - Returns result with pagination (no query support)
@@ -135,7 +138,7 @@ findByQueryScalar(ParameterBag $query, $criteria = [])
  - Return query as scalar result (for export or API)
 
 export(ParameterBag $query, $criteria = [])
- - Return all objects as scalar result (no query support)
+ - Return all objects as scalar result (no pagination)
 
 
 Note
