@@ -62,6 +62,25 @@ trait RepositoryHelper
     }
 
     /**
+     * Returns distinct items from desired column
+     *
+     * @param       $item
+     * @param array $criteria
+     *
+     * @return array
+     */
+    public function list($item, $criteria = [])
+    {
+        $dql = $this->createQueryBuilder($this->getTableName());
+        $dql = $this->filter($dql, $criteria);
+        $dql->select('DISTINCT('.$this->getTableName().'.'.$item.')')
+            ->orderBy($this->getTableName().'.'.$item, 'ASC');
+        $result = $dql->getQuery()->getScalarResult();
+
+        return array_column($result, 1);
+    }
+
+    /**
      * Returns result with pagination (no query support)
      *
      * @param int   $page
