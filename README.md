@@ -125,7 +125,7 @@ getTableName()
 count($criteria = [])
  - Returns element count
 
-list($item, $criteria = [])
+list($property, $criteria = [])
  - Returns distinct items from desired column
 
 findAllPaged($page = 1, $limit = 10, $criteria = [])
