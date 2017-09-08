@@ -69,7 +69,7 @@ trait RepositoryHelper
      *
      * @return array
      */
-    public function list($property, $criteria = [])
+    public function distinct($property, $criteria = [])
     {
         $params = $this->parse($property);
 
