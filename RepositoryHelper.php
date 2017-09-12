@@ -189,6 +189,7 @@ trait RepositoryHelper
         // Sets default values
         $page = $query->get('page', 1);
         $limit = $query->get('limit', 10);
+        $offset = ($page - 1) * $limit;
 
         // QueryBuilder
         $dql = $this->createQueryBuilder($this->getTableName());
@@ -197,10 +198,12 @@ trait RepositoryHelper
         $dql = $this->search($dql, $this->cleanQuery($query));
         $dql = $this->join($dql, $query);
 
-        $result = $dql->getQuery()->getScalarResult();
-        $offset = ($page - 1) * $limit;
+        $dql->setFirstResult($offset)
+            ->setMaxResults($limit);
 
-        return array_slice($result, $offset, $limit);
+        $result = $dql->getQuery()->getScalarResult();
+
+        return $result;
     }
 
     /**
