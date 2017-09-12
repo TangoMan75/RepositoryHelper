@@ -1,7 +1,7 @@
 TangoMan Repository Helper
 ==========================
 
-**TangoMan Repository Helper** adds useful functions to your repositories.
+**TangoMan Repository Helper** provides trait with useful functions for your repositories.
 
 How to install
 --------------
