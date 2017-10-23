@@ -3,20 +3,30 @@ TangoMan Repository Helper
 
 **TangoMan Repository Helper** provides trait with useful functions for your repositories.
 
-How to install
---------------
+Installation
+============
 
-With composer 
+Step 1: Download the Bundle
+---------------------------
 
-```console
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
+
+```bash
 $ composer require tangoman/repository-helper
 ```
 
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.omposer require tangoman/repository-helper
 
-How to use
-----------
 
-Inside your repository:
+Usage
+=====
+
+Inside your repository
+----------------------
+
 Add "use" statement just like when you're using a trait.
 
 ```php
@@ -36,7 +46,8 @@ class FoobarRepository extends EntityRepository
 }
 ```
 
-Inside your controller:
+Inside your controller
+----------------------
 
 ```php
 use Symfony\Component\HttpFoundation\Request;
@@ -61,10 +72,10 @@ class FoobarController extends Controller
     }
 ```
 
+Inside your views
+-----------------
 
-Inside your views:
-
-Search Form
+### Search Form
 ```twig
 <label for="inputUser">User</label>
 <input type="text" name="user-username" id="inputUser" class="form-control"
@@ -74,7 +85,7 @@ Will generate this:
 .../admin/posts/?user-username=admin
 
 
-Order Link
+### Order Link
 ```twig
 <th class="{{ app.request.query.get('order') == 'user-username' ? app.request.query.get('way', 'ASC') }}">
     <a href="{{ path('app_admin_post_index', app.request.query.all|merge({
@@ -91,7 +102,7 @@ Will generate this:
 
 
 Query Parameters
-----------------
+================
 
  - order : string  : switch-entity-property
  - way   : string  : ASC/DESC
@@ -101,7 +112,7 @@ Query Parameters
 
 
 Switches
---------
+========
 
 Switch values for mode/action
  - a : mode andWhere (search)
@@ -117,7 +128,7 @@ Switch values for mode/action
 
 
 Helper Functions
-----------------
+================
 
 getTableName()
  - Returns current table name
@@ -141,6 +152,19 @@ export(ParameterBag $query, $criteria = [])
  - Return all objects as scalar result (no pagination)
 
 
+Error
+=====
+
+When symfony raises this exception:
+
+> Semantical Error line 0, col 55 near 'company LIKE': Error: Invalid PathExpression. Must be a StateFieldPathExpression.
+
+![semantical error][semantical-error]
+
+It means that `<input name="foo-bar">` attribute doesn't target appropriate joined entity.
+
+Try `<input name="bar-name">`, **TangoMan Repository Helper** will take care of the join.
+
 Note
 ====
 
@@ -151,15 +175,16 @@ License
 
 Copyrights (c) 2017 Matthias Morin
 
-[![License][license-GPL]][license-url]
-Distributed under the GPLv3.0 license.
+[![License][license-MIT]][license-url]
+Distributed under the MIT license.
 
 If you like **TangoMan Repository Helper** please star!
 And follow me on GitHub: [TangoMan75](https://github.com/TangoMan75)
 ... And check my other cool projects.
 
-[tangoman.free.fr](http://tangoman.free.fr)
+[Matthias Morin | LinkedIn](https://www.linkedin.com/in/morinmatthias)
 
 [license-GPL]: https://img.shields.io/badge/Licence-GPLv3.0-green.svg
 [license-MIT]: https://img.shields.io/badge/Licence-MIT-green.svg
 [license-url]: LICENSE
+[semantical-error]: Resources/doc/semantical_error.jpg
