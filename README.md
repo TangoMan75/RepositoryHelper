@@ -81,7 +81,7 @@ Inside your views
 <input type="text" name="user-username" id="inputUser" class="form-control"
     value="{{ app.request.get('user-username')|join(', ') }}"/>
 ```
-Will generate this: 
+Will generate this:
 .../admin/posts/?user-username=admin
 
 
@@ -97,7 +97,7 @@ Will generate this:
     </a>
 </th>
 ```
-Will generate this: 
+Will generate this:
 .../admin/posts/?page=1&order=user-username&way=ASC
 
 
@@ -130,27 +130,15 @@ Switch values for mode/action
 Helper Functions
 ================
 
-getTableName()
- - Returns current table name
-
-count($criteria = [])
- - Returns element count
-
-distinct($property, $criteria = [])
- - Lists distinct items from desired column
-
-findAllPaged($page = 1, $limit = 10, $criteria = [])
- - Returns result with pagination (no query support)
-
-findByQuery(ParameterBag $query, $criteria = [])
- - Returns query result with pagination
-
-findByQueryScalar(ParameterBag $query, $criteria = [])
- - Return query as scalar result (for export or API)
-
-export(ParameterBag $query, $criteria = [])
- - Return all objects as scalar result (no pagination)
-
+|                        Function                        |                     Description                     |
+|--------------------------------------------------------|-----------------------------------------------------|
+| getTableName()                                         | Returns current table name                          |
+| count($criteria = [])                                  | Returns element count                               |
+| distinct($property, $criteria = [])                    | Lists distinct items from desired column            |
+| findAllPaged($page = 1, $limit = 10, $criteria = [])   | Returns result with pagination (no query support)   |
+| findByQuery(ParameterBag $query, $criteria = [])       | Returns query result with pagination                |
+| findByQueryScalar(ParameterBag $query, $criteria = []) | Return query as scalar result (for export or API)   |
+| export(ParameterBag $query, $criteria = [])            | Return all objects as scalar result (no pagination) |
 
 Error
 =====
@@ -161,7 +149,7 @@ When symfony raises this exception:
 
 ![semantical error][semantical-error]
 
-It means that `<input name="foo-bar">` attribute doesn't target appropriate joined entity.
+It means that you have an error inside your form: `<input name="foo-bar">` attribute doesn't target appropriate joined entity.
 
 Try `<input name="bar-name">`, **TangoMan Repository Helper** will take care of the join.
 
