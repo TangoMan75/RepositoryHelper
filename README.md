@@ -100,45 +100,47 @@ Will generate this:
 Will generate this:
 .../admin/posts/?page=1&order=user-username&way=ASC
 
+Helper Public Functions
+=======================
+
+|                       function                       |                                       description                                       |        parameters       |       return      |
+|------------------------------------------------------|-----------------------------------------------------------------------------------------|-------------------------|-------------------|
+| getTableName()                                       | Returns current table name                                                              | n/a                     | string            |
+| count($criteria = [])                                | Returns element count, filtered by given criteria                                       | array                   | integer           |
+| distinct($property, $criteria = [])                  | Lists distinct items from desired column, filtered by given criteria                    | string, array           | array             |
+| findAllPaged($page = 1, $limit = 10, $criteria = []) | Returns X results with pagination, starting from given page, filtered by given criteria | integer, integer, array | (object)Paginator |
+| findByQuery(Request $request, $criteria = [])        | Returns query result with pagination, filtered by given criteria                        | (object)Request, array  | (object)Paginator |
+| findByQueryScalar(Request $request, $criteria = [])  | Return query as scalar result with pagination, filtered by given criteria               | (object)Request, array  | (object)Paginator |
+| export(Request $request, $criteria = [])             | Return all objects as scalar result, filtered by given criteria                         | (object)Request, array  | array             |
 
 Query Parameters
 ================
 
- - order : string  : switch-entity-property
- - way   : string  : ASC/DESC
- - limit : integer : 1 -> ~
- - page  : integer : 1 -> ~
- - join  : string : switch-entity-property
-
+| parameter |   type  |         value          |
+|-----------|---------|------------------------|
+| order     | string  | switch-entity-property |
+| way       | string  | ASC/DESC               |
+| limit     | integer | 1 -> ~                 |
+| page      | integer | 1 -> ~                 |
+| join      | string  | switch-entity-property |
 
 Switches
 ========
 
 Switch values for mode/action
- - a : mode andWhere (search)
- - o : mode orWhere (search)
- - r : mode orderBy
- - b : action boolean
- - e : action exact match
- - l : action like
- - n : action not null
- - s : action simple array
- - c : action orderBy count
- - p : action orderBy property (alphabetical)
 
-
-Helper Functions
-================
-
-|                        Function                        |                     Description                     |
-|--------------------------------------------------------|-----------------------------------------------------|
-| getTableName()                                         | Returns current table name                          |
-| count($criteria = [])                                  | Returns element count                               |
-| distinct($property, $criteria = [])                    | Lists distinct items from desired column            |
-| findAllPaged($page = 1, $limit = 10, $criteria = [])   | Returns result with pagination (no query support)   |
-| findByQuery(ParameterBag $query, $criteria = [])       | Returns query result with pagination                |
-| findByQueryScalar(ParameterBag $query, $criteria = []) | Return query as scalar result (for export or API)   |
-| export(ParameterBag $query, $criteria = [])            | Return all objects as scalar result (no pagination) |
+| switch | mode/action |           description           |
+|--------|-------------|---------------------------------|
+| a      | mode        | andWhere (search)               |
+| o      | mode        | orWhere (search)                |
+| r      | mode        | orderBy                         |
+| b      | action      | boolean                         |
+| e      | action      | exact match                     |
+| l      | action      | like                            |
+| n      | action      | not null                        |
+| s      | action      | simple array                    |
+| c      | action      | orderBy count                   |
+| p      | action      | orderBy property (alphabetical) |
 
 Error
 =====
@@ -149,9 +151,9 @@ When symfony raises this exception:
 
 ![semantical error][semantical-error]
 
-It means that you have an error inside your form: `<input name="foo-bar">` attribute doesn't target appropriate joined entity.
+It means that you have an error inside your form: `<input name="foo-bar">`, attribute doesn't target appropriate joined entity.
 
-Try `<input name="bar-name">`, **TangoMan Repository Helper** will take care of the join.
+Try `<input name="foo-bar-name">`, or `<input name="bar-name">`, **TangoMan Repository Helper** will automatically handle the join.
 
 Note
 ====
