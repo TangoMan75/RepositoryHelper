@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -129,14 +130,16 @@ trait RepositoryHelper
     /**
      * Returns query result with pagination
      *
-     * @param ParameterBag $query
-     * @param array        $criteria
+     * @param Request $request
+     * @param array   $criteria
      *
      * @return Paginator
      * @throws QueryException
      */
-    public function findByQuery(ParameterBag $query, $criteria = [])
+    public function findByQuery(Request $request, $criteria = [])
     {
+        $query = $request->query;
+
         // Sets default values
         $page = $query->get('page', 1);
         $limit = $query->get('limit', 10);
@@ -179,13 +182,15 @@ trait RepositoryHelper
     /**
      * Return query as scalar result (for export or API)
      *
-     * @param ParameterBag $query
-     * @param array        $criteria
+     * @param Request $request
+     * @param array   $criteria
      *
      * @return array
      */
-    public function findByQueryScalar(ParameterBag $query, $criteria = [])
+    public function findByQueryScalar(Request $request, $criteria = [])
     {
+        $query = $request->query;
+
         // Sets default values
         $page = $query->get('page', 1);
         $limit = $query->get('limit', 10);
@@ -209,13 +214,15 @@ trait RepositoryHelper
     /**
      * Return all objects as scalar result (no pagination)
      *
-     * @param ParameterBag $query
-     * @param array        $criteria
+     * @param Request $request
+     * @param array   $criteria
      *
      * @return array
      */
-    public function export(ParameterBag $query, $criteria = [])
+    public function export(Request $request, $criteria = [])
     {
+        $query = $request->query;
+
         // QueryBuilder
         $dql = $this->createQueryBuilder($this->getTableName());
         $dql = $this->filter($dql, $criteria);
@@ -232,7 +239,7 @@ trait RepositoryHelper
      *
      * @return QueryBuilder
      */
-    public function filter(QueryBuilder $dql, $criteria = [])
+    protected function filter(QueryBuilder $dql, $criteria = [])
     {
         $index = 0;
         foreach ($criteria as $param => $value) {
@@ -255,7 +262,7 @@ trait RepositoryHelper
      *
      * @return QueryBuilder
      */
-    public function order(QueryBuilder $dql, ParameterBag $query)
+    protected function order(QueryBuilder $dql, ParameterBag $query)
     {
         $orders = (array)$query->get('order');
         $ways = (array)$query->get('way');
@@ -315,7 +322,7 @@ trait RepositoryHelper
      *
      * @return QueryBuilder
      */
-    public function search(QueryBuilder $dql, ParameterBag $query)
+    protected function search(QueryBuilder $dql, ParameterBag $query)
     {
         $this->index = 0;
         foreach ($query as $search => $value) {
@@ -338,13 +345,36 @@ trait RepositoryHelper
     }
 
     /**
+     * Builds DQL for simple array search
+     *
+     * @param QueryBuilder $dql
+     * @param              $column
+     * @param              $search
+     *
+     * @return QueryBuilder
+     */
+    protected function searchSimpleArray(QueryBuilder $dql, $column, $search)
+    {
+        $dql->andWhere($this->getTableName().'.'.$column.' LIKE :search')
+            ->setParameter(':search', "%,$search,%")
+            ->orWhere($this->getTableName().'.'.$column.' = :single')
+            ->setParameter(':single', $search)
+            ->orWhere($this->getTableName().'.'.$column.' LIKE :start')
+            ->setParameter(':start', "$search,%")
+            ->orWhere($this->getTableName().'.'.$column.' LIKE :end')
+            ->setParameter(':end', "%,$search");
+
+        return $dql;
+    }
+
+    /**
      * @param QueryBuilder $dql
      * @param              $params
      * @param              $value
      *
      * @return QueryBuilder
      */
-    public function searchDql(QueryBuilder $dql, $params, $value)
+    protected function searchDql(QueryBuilder $dql, $params, $value)
     {
         // Fix boolean bug
         // b : boolean
@@ -424,7 +454,7 @@ trait RepositoryHelper
      *
      * @return QueryBuilder
      */
-    public function join(QueryBuilder $dql, ParameterBag $query)
+    protected function join(QueryBuilder $dql, ParameterBag $query)
     {
         $joins = (array)$query->get('join');
         $this->index = 0;
@@ -442,7 +472,7 @@ trait RepositoryHelper
      *
      * @return QueryBuilder
      */
-    public function joinDql(QueryBuilder $dql, $params)
+    private function joinDql(QueryBuilder $dql, $params)
     {
         if ($params['entity'] == $this->getTableName()) {
             // We have entity: Joining full entity
@@ -465,7 +495,7 @@ trait RepositoryHelper
      *
      * @return array
      */
-    public function parse($string, $defaultMode = 'a')
+    private function parse($string, $defaultMode = 'a')
     {
         // Set default values for (mode/action)-entity-property
         // a : mode andWhere
@@ -565,7 +595,7 @@ trait RepositoryHelper
      *
      * @return array|bool
      */
-    public function getSwitches($string)
+    private function getSwitches($string)
     {
         $string = strtolower($string);
         $switches = str_split($string, 1);
@@ -588,7 +618,7 @@ trait RepositoryHelper
      *
      * @return string|null
      */
-    public function getMode($switches)
+    private function getMode($switches)
     {
         if (in_array('a', $switches)) {
             return 'a';
@@ -610,7 +640,7 @@ trait RepositoryHelper
      *
      * @return null|string
      */
-    public function getAction($switches)
+    private function getAction($switches)
     {
         // I left here possibility to have several actions
         $remove = [
@@ -635,7 +665,7 @@ trait RepositoryHelper
      *
      * @return ParameterBag
      */
-    public function cleanQuery(ParameterBag $query)
+    private function cleanQuery(ParameterBag $query)
     {
         // Cloning object to avoid browser side query string override
         $query = clone $query;
@@ -649,36 +679,13 @@ trait RepositoryHelper
         // Remove empty values from query
         $query->replace(
             array_filter(
-                $query->all(), function ($value) {
-                return $value !== '';
-            }
+                $query->all(),
+                function ($value) {
+                    return $value !== '';
+                }
             )
         );
 
         return $query;
     }
-
-    /**
-     * Builds DQL for simple array search
-     *
-     * @param QueryBuilder $dql
-     * @param              $column
-     * @param              $search
-     *
-     * @return QueryBuilder
-     */
-    public function searchSimpleArray(QueryBuilder $dql, $column, $search)
-    {
-        $dql->andWhere($this->getTableName().'.'.$column.' LIKE :search')
-            ->setParameter(':search', "%,$search,%")
-            ->orWhere($this->getTableName().'.'.$column.' = :single')
-            ->setParameter(':single', $search)
-            ->orWhere($this->getTableName().'.'.$column.' LIKE :start')
-            ->setParameter(':start', "$search,%")
-            ->orWhere($this->getTableName().'.'.$column.' LIKE :end')
-            ->setParameter(':end', "%,$search");
-
-        return $dql;
-    }
-
 }

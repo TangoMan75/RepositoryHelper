@@ -61,7 +61,7 @@ class FoobarController extends Controller
     {
         // Show searchable, sortable, paginated user list
         $em = $this->get('doctrine')->getManager();
-        $foobars = $em->getRepository('AppBundle:Foobar')->findByQuery($request->query);
+        $foobars = $em->getRepository('AppBundle:Foobar')->findByQuery($request);
 
         return $this->render(
             'admin/foobar/index.html.twig',
