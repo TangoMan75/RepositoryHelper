@@ -8,9 +8,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use TangoMan\RepositoryHelper\Model\TangoQL;
 
 /**
- * @author  Matthias Morin <tangoman@free.fr>
+ * @author  Matthias Morin <matthias.morin@gmail.com>
  * @package TangoMan\RepositoryHelper
  */
 trait RepositoryHelper
@@ -28,7 +29,7 @@ trait RepositoryHelper
     /**
      * @var array $switches
      */
-    private $switches = ['a', 'o', 'r', 'b', 'e', 'l', 'n', 's', 'c', 'p'];
+    private $switches = ['a', 'b', 'c', 'd', 'e', 'l', 'n', 'o', 'p', 'r', 's'];
 
     /**
      * Returns current table name
