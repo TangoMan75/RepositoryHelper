@@ -120,8 +120,8 @@ Query Parameters
 |-----------|---------|------------------------|
 | order     | string  | switch-entity-property |
 | way       | string  | `(ASC/DESC)`           |
-| limit     | integer | `[1-9]+\d`             |
-| page      | integer | `[1-9]+\d`             |
+| limit     | integer | `[1-9]+\d?`            |
+| page      | integer | `[1-9]+\d?`            |
 | join      | string  | switch-entity-property |
 
 Switches
