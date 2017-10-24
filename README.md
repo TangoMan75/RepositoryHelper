@@ -18,7 +18,7 @@ $ composer require tangoman/repository-helper
 
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.omposer require tangoman/repository-helper
+of the Composer documentation.
 
 
 Usage
@@ -119,28 +119,28 @@ Query Parameters
 | parameter |   type  |         value          |
 |-----------|---------|------------------------|
 | order     | string  | switch-entity-property |
-| way       | string  | ASC/DESC               |
-| limit     | integer | 1 -> ~                 |
-| page      | integer | 1 -> ~                 |
+| way       | string  | `(ASC/DESC)`           |
+| limit     | integer | `[1-9]+\d`             |
+| page      | integer | `[1-9]+\d`             |
 | join      | string  | switch-entity-property |
 
 Switches
 ========
 
-Switch values for mode/action
+Switch values for mode/operator/action
 
-| switch | mode/action |           description           |
-|--------|-------------|---------------------------------|
-| a      | mode        | andWhere (search)               |
-| o      | mode        | orWhere (search)                |
-| r      | mode        | orderBy                         |
-| b      | action      | boolean                         |
-| e      | action      | exact match                     |
-| l      | action      | like                            |
-| n      | action      | not null                        |
-| s      | action      | simple array                    |
-| c      | action      | orderBy count                   |
-| p      | action      | orderBy property (alphabetical) |
+| switch |   mode   | description |
+|--------|----------|-------------|
+| a      | andWhere | andWhere    |
+| b      | search   | boolean     |
+| c      | order    | count       |
+| e      | search   | exactMatch  |
+| l      | search   | like        |
+| n      | search   | notNull     |
+| o      | orWhere  | orWhere     |
+| p      | order    | property    |
+| r      | order    | orderBy     |
+| s      | search   | simpleArray |
 
 Error
 =====
