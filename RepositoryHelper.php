@@ -8,7 +8,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use TangoMan\RepositoryHelper\Model\TangoQL;
 
 /**
  * @author  Matthias Morin <matthias.morin@gmail.com>
