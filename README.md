@@ -106,7 +106,7 @@ Helper Public Functions
 |                       function                       |                                       description                                       |        parameters       |       return      |
 |------------------------------------------------------|-----------------------------------------------------------------------------------------|-------------------------|-------------------|
 | getTableName()                                       | Returns current table name                                                              | n/a                     | string            |
-| count($criteria = [])                                | Returns element count, filtered by given criteria                                       | array                   | integer           |
+| countByCriteria($criteria = [])                                | Returns element count, filtered by given criteria                                       | array                   | integer           |
 | distinct($property, $criteria = [])                  | Lists distinct items from desired column, filtered by given criteria                    | string, array           | array             |
 | findAllPaged($page = 1, $limit = 10, $criteria = []) | Returns X results with pagination, starting from given page, filtered by given criteria | integer, integer, array | (object)Paginator |
 | findByQuery(Request $request, $criteria = [])        | Returns query result with pagination, filtered by given criteria                        | (object)Request, array  | (object)Paginator |
@@ -153,7 +153,7 @@ When symfony raises this exception:
 
 It means that you have an error inside your form: `<input name="foo-bar">`, attribute doesn't target appropriate joined entity.
 
-Try `<input name="foo-bar-name">`, or `<input name="bar-name">`, **TangoMan Repository Helper** will automatically handle the join.
+Try `<input name="foo-bar-title">`, or `<input name="bar-title">`, **TangoMan Repository Helper** will automatically handle the join.
 
 Note
 ====
