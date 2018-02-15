@@ -100,8 +100,8 @@ Will generate this:
 Will generate this:
 .../admin/posts/?page=1&order=user-username&way=ASC
 
-Helper Public Functions
-=======================
+Helper Public Methods
+=====================
 
 |                       function                       |                                       description                                       |        parameters       |       return      |
 |------------------------------------------------------|-----------------------------------------------------------------------------------------|-------------------------|-------------------|
