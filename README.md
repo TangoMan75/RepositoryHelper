@@ -106,7 +106,7 @@ Helper Public Methods
 |                       function                       |                                       description                                       |        parameters       |       return      |
 |------------------------------------------------------|-----------------------------------------------------------------------------------------|-------------------------|-------------------|
 | getTableName()                                       | Returns current table name                                                              | n/a                     | string            |
-| countByCriteria($criteria = [])                                | Returns element count, filtered by given criteria                                       | array                   | integer           |
+| countBy($criteria = [])                                | Returns element count, filtered by given criteria                                       | array                   | integer           |
 | distinct($property, $criteria = [])                  | Lists distinct items from desired column, filtered by given criteria                    | string, array           | array             |
 | findAllPaged($page = 1, $limit = 10, $criteria = []) | Returns X results with pagination, starting from given page, filtered by given criteria | integer, integer, array | (object)Paginator |
 | findByQuery(Request $request, $criteria = [])        | Returns query result with pagination, filtered by given criteria                        | (object)Request, array  | (object)Paginator |
