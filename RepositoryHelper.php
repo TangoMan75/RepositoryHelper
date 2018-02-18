@@ -52,7 +52,7 @@ trait RepositoryHelper
      *
      * @return mixed
      */
-    public function countByCriteria($criteria = [])
+    public function countBy($criteria = [])
     {
         $dql = $this->createQueryBuilder($this->getTableName());
         $dql = $this->filter($dql, $criteria);
