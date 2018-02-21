@@ -145,11 +145,9 @@ Switch values for mode/operator/action
 Error
 =====
 
-When symfony raises this exception:
+When symfony raises following *QueryException* exception:
 
-> Semantical Error line 0, col 55 near 'company LIKE': Error: Invalid PathExpression. Must be a StateFieldPathExpression.
-
-![semantical error][semantical-error]
+> &lsqb;Semantical Error&rsqb; line X, col XX near 'foo LIKE': Error: Invalid PathExpression. Must be a StateFieldPathExpression.
 
 It means that you have an error inside your form: `<input name="foo-bar">`, attribute doesn't target appropriate joined entity.
 
@@ -177,4 +175,3 @@ And follow me on GitHub: [TangoMan75](https://github.com/TangoMan75)
 [license-GPL]: https://img.shields.io/badge/Licence-GPLv3.0-green.svg
 [license-MIT]: https://img.shields.io/badge/Licence-MIT-green.svg
 [license-url]: LICENSE
-[semantical-error]: Resources/doc/semantical_error.jpg
