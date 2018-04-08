@@ -20,7 +20,6 @@ This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-
 Usage
 =====
 
@@ -83,7 +82,6 @@ Inside your views
 ```
 Will generate this:
 .../admin/posts/?user-username=admin
-
 
 ### Order Link
 ```twig
@@ -161,7 +159,7 @@ If you find any bug please report here : [Issues](https://github.com/TangoMan75/
 License
 =======
 
-Copyrights (c) 2018 Matthias Morin
+Copyright (c) 2018 Matthias Morin
 
 [![License][license-MIT]][license-url]
 Distributed under the MIT license.
@@ -172,6 +170,5 @@ And follow me on GitHub: [TangoMan75](https://github.com/TangoMan75)
 
 [Matthias Morin | LinkedIn](https://www.linkedin.com/in/morinmatthias)
 
-[license-GPL]: https://img.shields.io/badge/Licence-GPLv3.0-green.svg
 [license-MIT]: https://img.shields.io/badge/Licence-MIT-green.svg
 [license-url]: LICENSE

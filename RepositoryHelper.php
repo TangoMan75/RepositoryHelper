@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright (c) 2018 Matthias Morin <matthias.morin@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace TangoMan\RepositoryHelper;
 
@@ -15,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 trait RepositoryHelper
 {
+
     /**
      * @var null
      */
@@ -37,9 +44,10 @@ trait RepositoryHelper
      */
     public function getTableName()
     {
-        if (!$this->tableName) {
-            $em = $this->getEntityManager();
-            $this->tableName = $em->getClassMetadata($this->getEntityName())->getTableName();
+        if ( ! $this->tableName) {
+            $em              = $this->getEntityManager();
+            $this->tableName = $em->getClassMetadata($this->getEntityName())
+                                  ->getTableName();
         }
 
         return $this->tableName;
@@ -79,7 +87,10 @@ trait RepositoryHelper
         $dql->select('DISTINCT('.$params['entity'].'.'.$params['property'].')');
 
         if ($params['join']) {
-            $dql->leftJoin($this->getTableName().'.'.$params['entity'], $params['entity']);
+            $dql->leftJoin(
+                $this->getTableName().'.'.$params['entity'],
+                $params['entity']
+            );
         }
         $dql->orderBy($params['entity'].'.'.$params['property'], 'ASC');
 
@@ -99,13 +110,13 @@ trait RepositoryHelper
      */
     public function findAllPaged($page = 1, $limit = 10, $criteria = [])
     {
-        if (!is_numeric($page)) {
+        if ( ! is_numeric($page)) {
             throw new \InvalidArgumentException(
                 '$page must be an integer ('.gettype($page).' : '.$page.')'
             );
         }
 
-        if (!is_numeric($limit)) {
+        if ( ! is_numeric($limit)) {
             throw new \InvalidArgumentException(
                 '$limit must be an integer ('.gettype($limit).' : '.$limit.')'
             );
@@ -115,7 +126,7 @@ trait RepositoryHelper
         $dql = $this->filter($dql, $criteria);
 
         $firstResult = ($page - 1) * $limit;
-        $query = $dql->getQuery();
+        $query       = $dql->getQuery();
         $query->setFirstResult($firstResult);
         $query->setMaxResults($limit);
         $paginator = new Paginator($query);
@@ -141,16 +152,16 @@ trait RepositoryHelper
         $query = $request->query;
 
         // Sets default values
-        $page = $query->get('page', 1);
+        $page  = $query->get('page', 1);
         $limit = $query->get('limit', 10);
 
-        if (!is_numeric($page)) {
+        if ( ! is_numeric($page)) {
             throw new \InvalidArgumentException(
                 '$page must be an integer ('.gettype($page).' : '.$page.')'
             );
         }
 
-        if (!is_numeric($limit)) {
+        if ( ! is_numeric($limit)) {
             throw new \InvalidArgumentException(
                 '$limit must be an integer ('.gettype($limit).' : '.$limit.')'
             );
@@ -163,7 +174,11 @@ trait RepositoryHelper
         $dql = $this->join($dql, $query);
 
         $firstResult = ($page - 1) * $limit;
-        $paginator = new Paginator($dql->getQuery()->setFirstResult($firstResult)->setMaxResults($limit));
+        $paginator   = new Paginator(
+            $dql->getQuery()->setFirstResult($firstResult)->setMaxResults(
+                $limit
+            )
+        );
         try {
             if (($paginator->count() <= $firstResult) && $page != 1) {
                 throw new NotFoundHttpException('Page not found');
@@ -192,8 +207,8 @@ trait RepositoryHelper
         $query = $request->query;
 
         // Sets default values
-        $page = $query->get('page', 1);
-        $limit = $query->get('limit', 10);
+        $page   = $query->get('page', 1);
+        $limit  = $query->get('limit', 10);
         $offset = ($page - 1) * $limit;
 
         // QueryBuilder
@@ -244,10 +259,18 @@ trait RepositoryHelper
         $index = 0;
         foreach ($criteria as $param => $value) {
             if (is_array($value)) {
-                $dql->andWhere($this->getTableName().'.'.$param.' IN(:filterParam_'.$index.')')
-                    ->setParameter(':filterParam_'.$index, array_values($value));
+                $dql->andWhere(
+                    $this->getTableName().'.'.$param.' IN(:filterParam_'.$index
+                    .')'
+                )
+                    ->setParameter(
+                        ':filterParam_'.$index,
+                        array_values($value)
+                    );
             } else {
-                $dql->andWhere($this->getTableName().'.'.$param.' = :filterParam_'.$index)
+                $dql->andWhere(
+                    $this->getTableName().'.'.$param.' = :filterParam_'.$index
+                )
                     ->setParameter(':filterParam_'.$index, $value);
             }
             $index++;
@@ -264,15 +287,16 @@ trait RepositoryHelper
      */
     protected function order(QueryBuilder $dql, ParameterBag $query)
     {
-        $orders = (array)$query->get('order');
-        $ways = (array)$query->get('way');
+        $orders  = (array)$query->get('order');
+        $ways    = (array)$query->get('way');
         $groupBy = false;
 
         foreach ($orders as $index => $order) {
             // 'DESC' is default way
-            $way = (isset($ways[$index]) && $ways[$index] == 'ASC') ? 'ASC' : 'DESC';
+            $way = (isset($ways[$index]) && $ways[$index] == 'ASC') ? 'ASC'
+                : 'DESC';
 
-            $params = $this->parse($order, 'r');
+            $params     = $this->parse($order, 'r');
             $orderParam = null;
 
             if ($params['join']) {
@@ -280,18 +304,30 @@ trait RepositoryHelper
                     // Join count
                     // HIDDEN parameter allows to use statement as orderBy without doctrine fetching undesired data
                     case 'c':
-                        $dql->addSelect('COUNT(joinOrder_'.$index.') AS HIDDEN orderParam_'.$index);
-                        $dql->leftJoin($params['entity'].'.'.$params['property'], 'joinOrder_'.$index);
+                        $dql->addSelect(
+                            'COUNT(joinOrder_'.$index.') AS HIDDEN orderParam_'
+                            .$index
+                        );
+                        $dql->leftJoin(
+                            $params['entity'].'.'.$params['property'],
+                            'joinOrder_'.$index
+                        );
                         $orderParam = 'orderParam_'.$index;
-                        $groupBy = true;
+                        $groupBy    = true;
                         break;
 
                     // alphabetical order
                     case 'p':
-                        $dql->addSelect('joinOrder_'.$index.'.'.$params['property'].' AS HIDDEN orderParam_'.$index);
-                        $dql->leftJoin($this->getTableName().'.'.$params['entity'], 'joinOrder_'.$index);
+                        $dql->addSelect(
+                            'joinOrder_'.$index.'.'.$params['property']
+                            .' AS HIDDEN orderParam_'.$index
+                        );
+                        $dql->leftJoin(
+                            $this->getTableName().'.'.$params['entity'],
+                            'joinOrder_'.$index
+                        );
                         $orderParam = 'orderParam_'.$index;
-                        $groupBy = true;
+                        $groupBy    = true;
                         break;
                 }
             } else {
@@ -394,9 +430,15 @@ trait RepositoryHelper
             // e  : exact match
             case 'e':
                 if ($params['mode'] == 'a') {
-                    $dql->andWhere($params['entity'].'.'.$params['property'].' = :searchParam_'.$this->index);
+                    $dql->andWhere(
+                        $params['entity'].'.'.$params['property']
+                        .' = :searchParam_'.$this->index
+                    );
                 } else {
-                    $dql->orWhere($params['entity'].'.'.$params['property'].' = :searchParam_'.$this->index);
+                    $dql->orWhere(
+                        $params['entity'].'.'.$params['property']
+                        .' = :searchParam_'.$this->index
+                    );
                 }
 
                 $dql->setParameter(':searchParam_'.$this->index, $value);
@@ -406,43 +448,68 @@ trait RepositoryHelper
             // l : like
             case 'l':
                 if ($params['mode'] == 'a') {
-                    $dql->andWhere($params['entity'].'.'.$params['property'].' LIKE :searchParam_'.$this->index);
+                    $dql->andWhere(
+                        $params['entity'].'.'.$params['property']
+                        .' LIKE :searchParam_'.$this->index
+                    );
                 } else {
-                    $dql->orWhere($params['entity'].'.'.$params['property'].' LIKE :searchParam_'.$this->index);
+                    $dql->orWhere(
+                        $params['entity'].'.'.$params['property']
+                        .' LIKE :searchParam_'.$this->index
+                    );
                 }
 
-                $dql->setParameter(':searchParam_'.$this->index, '%'.$value.'%');
+                $dql->setParameter(
+                    ':searchParam_'.$this->index,
+                    '%'.$value.'%'
+                );
                 $this->index++;
                 break;
 
             // s  : simple array
             case 's':
-                $dql = $this->searchSimpleArray($dql, $params['property'], $value);
+                $dql = $this->searchSimpleArray(
+                    $dql,
+                    $params['property'],
+                    $value
+                );
                 break;
 
             // b : boolean
             case 'b':
                 if ($value === true) {
-                    $dql->andWhere($this->getTableName().'.'.$params['property'].' = 1');
+                    $dql->andWhere(
+                        $this->getTableName().'.'.$params['property'].' = 1'
+                    );
                 }
                 if ($value === false) {
-                    $dql->andWhere($this->getTableName().'.'.$params['property'].' = 0');
+                    $dql->andWhere(
+                        $this->getTableName().'.'.$params['property'].' = 0'
+                    );
                 }
                 break;
 
             // n : not null
             case 'n':
                 if ($value === true) {
-                    $dql->andWhere($this->getTableName().'.'.$params['property'].' IS NOT NULL');
+                    $dql->andWhere(
+                        $this->getTableName().'.'.$params['property']
+                        .' IS NOT NULL'
+                    );
                 }
                 if ($value === false) {
-                    $dql->andWhere($this->getTableName().'.'.$params['property'].' IS NULL');
+                    $dql->andWhere(
+                        $this->getTableName().'.'.$params['property'].' IS NULL'
+                    );
                 }
                 break;
         }
 
         if ($params['join'] == true) {
-            $dql->leftJoin($this->getTableName().'.'.$params['entity'], $params['entity']);
+            $dql->leftJoin(
+                $this->getTableName().'.'.$params['entity'],
+                $params['entity']
+            );
         }
 
         return $dql;
@@ -456,7 +523,7 @@ trait RepositoryHelper
      */
     protected function join(QueryBuilder $dql, ParameterBag $query)
     {
-        $joins = (array)$query->get('join');
+        $joins       = (array)$query->get('join');
         $this->index = 0;
 
         foreach ($joins as $index => $value) {
@@ -476,12 +543,24 @@ trait RepositoryHelper
     {
         if ($params['entity'] == $this->getTableName()) {
             // We have entity: Joining full entity
-            $dql->addSelect($params['property'].' AS '.$params['entity'].'_'.$params['property']);
-            $dql->leftJoin($params['entity'].'.'.$params['property'], $params['property']);
+            $dql->addSelect(
+                $params['property'].' AS '.$params['entity'].'_'
+                .$params['property']
+            );
+            $dql->leftJoin(
+                $params['entity'].'.'.$params['property'],
+                $params['property']
+            );
         } else {
             // We have entity-property: Joining entity-property
-            $dql->addSelect($params['entity'].'.'.$params['property'].' AS '.$params['entity'].'_'.$params['property']);
-            $dql->leftJoin($this->getTableName().'.'.$params['entity'], $params['entity']);
+            $dql->addSelect(
+                $params['entity'].'.'.$params['property'].' AS '
+                .$params['entity'].'_'.$params['property']
+            );
+            $dql->leftJoin(
+                $this->getTableName().'.'.$params['entity'],
+                $params['entity']
+            );
         }
 
         $this->index++;
@@ -519,7 +598,7 @@ trait RepositoryHelper
         // when mode is orderBy, default action is orderBy property (alphabetical)
         // and default property is id
         if ($defaultMode == 'r') {
-            $params['action'] = 'p';
+            $params['action']   = 'p';
             $params['property'] = 'id';
         }
 
@@ -572,7 +651,7 @@ trait RepositoryHelper
                     }
                 }
 
-                $params['entity'] = $temp[1];
+                $params['entity']   = $temp[1];
                 $params['property'] = $temp[2];
                 break;
         }
@@ -597,7 +676,7 @@ trait RepositoryHelper
      */
     private function getSwitches($string)
     {
-        $string = strtolower($string);
+        $string   = strtolower($string);
         $switches = str_split($string, 1);
 
         // No more than 3 switches allowed (join, mode, action)
